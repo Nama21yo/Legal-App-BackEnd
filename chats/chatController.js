@@ -5,54 +5,6 @@ const User = require("../models/userModel");
 const { sendChatNotification } = require("./chatService");
 
 class ChatController {
-  // async fetchChatHistory(senderId, receiverId, limit, page) {
-  //   const skip = (page - 1) * limit;
-
-  //   // Fetch messages from the Chat Model
-  //   const messages = await Message.find({
-  //     $or: [
-  //       { sender: senderId, receiver: receiverId },
-  //       { sender: receiverId, receiver: senderId },
-  //     ],
-  //   })
-  //     .sort({ timestamp: -1 }) // Sort by most recent
-  //     .skip(skip)
-  //     .limit(limit);
-
-  //   const totalMessages = await Message.countDocuments({
-
-  // Controller Method: fetchChatHistory
-  // async fetchChatHistory(senderId, receiverId, limit, page) {
-  //   const skip = (page - 1) * limit;
-
-  //   // Fetch messages from the Chat Model
-  //   const messages = await Message.find({
-  //     $or: [
-  //       { sender: senderId, receiver: receiverId },
-  //       { sender: receiverId, receiver: senderId },
-  //     ],
-  //   })
-  //     .sort({ timestamp: -1 }) // Sort by most recent
-  //     .skip(skip)
-  //     .limit(limit);
-
-  //   const totalMessages = await Message.countDocuments({
-  //     $or: [
-  //       { sender: senderId, receiver: receiverId },
-  //       { sender: receiverId, receiver: senderId },
-  //     ],
-  //   });
-
-  //   return {
-  //     messages,
-  //     pagination: {
-  //       total: totalMessages,
-  //       limit,
-  //       page,
-  //       totalPages: Math.ceil(totalMessages / limit),
-  //     },
-  //   };
-  // }
   async fetchChatHistory(req, res) {
     try {
       const { senderId, receiverId } = req.params;
