@@ -21,20 +21,20 @@ class ChatService {
 
     try {
       // Query for messages where either sender is senderId and receiver is receiverId, or vice versa
-      const totalMessages = await ChatMessage.countDocuments({
+      const totalMessages = await Message.countDocuments({
         $or: [
           { sender: senderId, receiver: receiverId },
           { sender: receiverId, receiver: senderId },
         ],
       });
 
-      const chatMessages = await ChatMessage.find({
+      const chatMessages = await Message.find({
         $or: [
           { sender: senderId, receiver: receiverId },
           { sender: receiverId, receiver: senderId },
         ],
       })
-        .sort({ timestamp: -1 }) // Sort by timestamp descending to get latest messages first
+        .sort({ createdAt: -1 }) // Ensure correct sorting field exists
         .skip(skip)
         .limit(limit)
         .populate("sender", "fullname email") // Populate sender details
@@ -52,6 +52,7 @@ class ChatService {
         },
       };
     } catch (error) {
+      console.error("Error fetching chat history:", error);
       throw error;
     }
   }
@@ -59,9 +60,9 @@ class ChatService {
   async getAllChats(userId) {
     try {
       // Fetch all unique chat partners for the user
-      const messages = await ChatMessage.find({
+      const messages = await Message.find({
         $or: [{ sender: userId }, { receiver: userId }],
-      }).sort({ timestamp: -1 });
+      }).sort({ createdAt: -1 });
 
       // Group by unique chat partners
       const chatPartners = {};
@@ -74,7 +75,7 @@ class ChatService {
           chatPartners[partnerId] = {
             partnerId,
             lastMessage: message.content,
-            timestamp: message.timestamp,
+            timestamp: message.createdAt, // Ensure the correct timestamp field is used
           };
         }
       });
@@ -91,7 +92,7 @@ class ChatService {
 
       return partnerDetails;
     } catch (error) {
-      console.log("Error fetching all chats", error);
+      console.error("Error fetching all chats:", error);
       throw error;
     }
   }
